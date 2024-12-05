@@ -1,0 +1,324 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheFarb Payment Gateway</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            position: relative;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            background-color: orange;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: darkorange;
+        }
+
+        /* Payment Options */
+        .payment-block {
+            background: white;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            cursor: pointer;
+        }
+
+        .payment-block:hover {
+            background-color: #f0f0f0;
+        }
+
+        .payment-block h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .payment-block p {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Hidden Sections */
+        .hidden {
+            display: none;
+        }
+
+        /* UPI MS-Inspired Styles */
+        .ms-style {
+            padding: 20px;
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            max-width: 400px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .ms-header {
+            font-size: 22px;
+            font-weight: bold;
+            color: #0078D4; /* Microsoft Accent Blue */
+            margin-bottom: 12px;
+        }
+
+        .ms-desc {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 16px;
+        }
+
+        .ms-button {
+            display: block;
+            width: 90%;
+            max-width: 300px;
+            background-color: #0078D4;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            margin: 10px auto;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .ms-button:hover {
+            background-color: #005A9E;
+        }
+
+        .ms-button.primary {
+            background-color: #107C10; /* MS Fluent Green */
+        }
+
+        .ms-button.primary:hover {
+            background-color: #0E6A08;
+        }
+
+        .ms-input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        .ms-input:focus {
+            border-color: #0078D4;
+            outline: none;
+        }
+
+        /* Accessibility */
+        .ms-button:focus, .ms-input:focus {
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.3);
+        }
+
+        /* Card Payment Form */
+        #card-payment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        input {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        button[type="submit"] {
+            padding: 12px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Scan to Pay Section */
+        #scan-to-pay-section {
+            display: block;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        #qr-code-container {
+            margin: 0 auto;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-button" onclick="goBack()">← Back</button>
+        <h1>TheFarb Payment Gateway</h1>
+    </div>
+
+    <!-- Main Payment Options -->
+    <div id="main-payment-options">
+        <div class="payment-block" onclick="showUPIPayment()">
+            <h2>UPI / QR</h2>
+            <p>Pay using PhonePe, Google Pay, Paytm</p>
+        </div>
+        <div class="payment-block" onclick="showCardPayment()">
+            <h2>Card</h2>
+            <p>Visa, MasterCard, RuPay & More</p>
+        </div>
+        <div class="payment-block" onclick="showScanToPay()">
+            <h2>Scan to Pay</h2>
+            <p>Use QR code to pay</p>
+        </div>
+    </div>
+
+    <!-- UPI Payment Section -->
+    <div id="upi-options" class="hidden ms-style">
+        <h3 class="ms-header">Pay via UPI</h3>
+        <p class="ms-desc">Choose your preferred UPI app</p>
+        <button onclick="redirectToUPI('phonepe')" class="ms-button">Pay with PhonePe</button>
+        <button onclick="redirectToUPI('googlepay')" class="ms-button">Pay with Google Pay</button>
+        <button onclick="redirectToUPI('paytm')" class="ms-button">Pay with Paytm</button>
+        <div class="upi-id-input">
+            <label for="upi-id">Or Enter UPI ID:</label>
+            <input type="text" id="upi-id" placeholder="example@upi" class="ms-input">
+            <button class="ms-button primary" onclick="submitUPIID()">Submit</button>
+        </div>
+    </div>
+
+    <!-- Scan to Pay Section -->
+    <div id="scan-to-pay-section" class="hidden">
+        <h3>Scan to Pay</h3>
+        <div id="qr-code-container"></div>
+    </div>
+
+    <!-- Card Payment Section -->
+    <div id="card-payment-section" class="hidden">
+        <h3>Card Payment</h3>
+        <form id="card-payment-form">
+            <div class="form-group">
+                <input type="text" id="card-number" placeholder="Card number" maxlength="16" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group half">
+                    <input type="text" id="expiry-date" placeholder="MM/YY" maxlength="5" required>
+                </div>
+                <div class="form-group half">
+                    <input type="text" id="cvv" placeholder="CVV" maxlength="3" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="text" id="cardholder-name" placeholder="Card holder name" required>
+            </div>
+            <button type="submit">Pay</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script>
+        function goBack() {
+            document.getElementById("main-payment-options").style.display = "block";
+            document.getElementById("upi-options").style.display = "none";
+            document.getElementById("scan-to-pay-section").style.display = "none";
+            document.getElementById("card-payment-section").style.display = "none";
+        }
+
+        function showUPIPayment() {
+            document.getElementById("main-payment-options").style.display = "none";
+            document.getElementById("upi-options").style.display = "block";
+        }
+
+        function redirectToUPI(app) {
+            alert(`Redirecting to ${app}...`);
+        }
+
+        function submitUPIID() {
+            const upiId = document.getElementById("upi-id").value;
+            if (!upiId || !upiId.includes("@")) {
+                alert("Please enter a valid UPI ID.");
+            } else {
+                alert(`Processing payment for UPI ID: ${upiId}`);
+            }
+        }
+
+        function showScanToPay() {
+            document.getElementById("main-payment-options").style.display = "none";
+            document.getElementById("scan-to-pay-section").style.display = "block";
+
+            const qrContainer = document.getElementById("qr-code-container");
+            qrContainer.innerHTML = ""; // Clear existing QR code
+            new QRCode(qrContainer, {
+                text: "upi://pay?pa=thefabr@ybl&pn=TheFarb&cu=INR",
+                width: 200,
+                height: 200,
+            });
+        }
+
+        function showCardPayment() {
+            document.getElementById("main-payment-options").style.display = "none";
+            document.getElementById("card-payment-section").style.display = "block";
+        }
+    </script>
+</body>
+</html>
